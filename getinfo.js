@@ -24,11 +24,11 @@ module.exports = function(filePath) {
                 reject("get info fail");
                 return;
             }
-            resolve({
-                codec_name : data.streams[0].codec_name,
-                width : data.streams[0].width,
-                height : data.streams[0].height,
-            })
+            let outdata = {};
+            for (let i = 0; i < data.streams.length; i++) {
+                outdata[data.streams[i].codec_type] = data.streams[i];
+            }
+            resolve(outdata);
         })
     })
 }

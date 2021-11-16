@@ -7,6 +7,8 @@ const fs = require("fs");
 const inputVideoPath = `${__dirname}/testvideo.mp4`;
 const outVideoPath = `${__dirname}/test.mp4`;
 
+let reader;
+
 getinfo(inputVideoPath)
 .then(function(videoInfo) {
     videoInfo.width = 1920;
@@ -15,8 +17,8 @@ getinfo(inputVideoPath)
     const ctx = canvas.getContext('2d');
     let image;
 
-    const reader = new getFrame2Buffer(inputVideoPath, "00:00:00", "00:00:18");
-    const writer = new createBuffer2video(outVideoPath, "30");
+    reader = new getFrame2Buffer(inputVideoPath, "00:00:00", "00:00:18", 60);
+    const writer = new createBuffer2video(outVideoPath, 60);
 
 
     writer.start();
@@ -38,26 +40,16 @@ getinfo(inputVideoPath)
             writer.pushData(buf);
             
             setTimeout(function() { 
-                if(
-                    (typeof lastCount !== 'undefined') &&
-                    (count === lastCount)
-                ) {
-                    console.log("count === lastCount: ", count);
-                    writer.end();
-                    return;
-                }
                 reader.next();
-            }, 20)
+            }, 0)
         }
     })
     reader.setOnEnd(function(count) {
-        console.log("lastCount:", count);
-        lastCount = count;
+        console.log("end", count);
+        writer.end();
     })
-    let lastCount;
     reader.start();
 })
 .catch((e) => {
     console.log(e);
 })
-

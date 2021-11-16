@@ -10,20 +10,22 @@ module.exports = function(filePath, framerate) {
         ffmpeg = spawn('ffmpeg', [
             `-y`,
             '-framerate', framerate,
-            '-r', '25',
+            '-r', framerate,
             '-i', 'pipe:',
             '-pix_fmt', 'yuv420p',
-            '-r', '25',
+            '-r', framerate,
             '-framerate', framerate,
             filePath
         ]);
 
         //콘솔 출력
         // ffmpeg.stderr.pipe(process.stdout);
+        
         console.log("filePath", filePath);
         onPushData = function(buffer) {
+            ffmpeg.stdin.cork();
             ffmpeg.stdin.write(buffer);
-            ffmpeg.stdout.on
+            ffmpeg.stdin.uncork();
         }
     }
     this.pushData = function(Buffer) {
