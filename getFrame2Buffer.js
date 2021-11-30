@@ -77,18 +77,17 @@ module.exports = function(filePath, startTime, timeLength, outfps) {
                     tempBuffer.push(bufferDataArray[bufferCount + 1]);
                     bufferCount += 2;
                     
-                    ratioCount += that.frameRate - 1;
+                    ratioCount += (that.frameRate - 1);
                     addNum = Math.floor(ratioCount);
                     ratioCount -= addNum;
 
                     let frameBuffer = Buffer.from(tempBuffer);
 
                     if(that.frameRateFlag) {
-                        for (let i = 1; i < addNum + 1; i++) {
+                        for (let i = 0; i < addNum; i++) {
                             that.onDataFunc(frameBuffer, that.count);
-                            --ratioCount;
+                            // --ratioCount;
                             ++that.count;
-                            console.log("count :", that.count);
                             console.log("added", addNum);
                         }
                         that.onDataFunc(frameBuffer, that.count);
@@ -97,6 +96,7 @@ module.exports = function(filePath, startTime, timeLength, outfps) {
 
                         tempBuffer = [];
                         return;
+                        
                     }
                     else {
                         if(passnum !== 0) {
